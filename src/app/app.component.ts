@@ -60,13 +60,6 @@ export class AppComponent {
   }
 
   updateHistory() {
-    console.log('sd')
-    console.log(this.gameHistory)
-    setTimeout(function() {
-      if (this.gameHistory) this.gameHistory.shift();
-      console.log(this.gameHistory)
-      // return this.gameHistory;
-    }, 5000);
   }
 
   dealCards(): void {
@@ -76,23 +69,26 @@ export class AppComponent {
     document.getElementById('hit_btn').removeAttribute('disabled')
     document.getElementById('stand_btn').removeAttribute('disabled')
     document.getElementById('settle_btn').removeAttribute('disabled')
-    // this.updateHistory();
   }
 
   hit(): void {
-    this.game.dealCard()
-    this.readCardValues()
+    this.game.dealCard().then(() => {
+      this.readCardValues()
+    })
   }
 
   stand(): void {
     this.game.setHistory('You stand.. dealer\'s turn')
     this.playDealer()
   }
-
-  playDealer(): void {
-    this.game.dealDealerCard()
-    this.readCardValues()
-    this.updateHistory()
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+  playDealer() {
+    this.game.dealDealerCard().then(() => {
+      this.sleep(2000)
+      this.readCardValues()
+    })
   }
 
   readCardValues() {
@@ -117,6 +113,10 @@ export class AppComponent {
     const status = this.game.settle()
     if (!status) return
     switch (status.flag) {
+      case 0:
+        this.showHand()
+        this.resetButtons()
+        break
       case 1:
         this.updateScore(this.player)
         break
@@ -132,7 +132,10 @@ export class AppComponent {
   updateScore(player) {
     this.showHand()
     if (player) player.isDealer ? this.dealerWin++ : this.playerWin++;
+    this.resetButtons()
+  }
 
+  resetButtons() {
     document.getElementById('newGame_btn').removeAttribute('disabled')
     document.getElementById('hit_btn').setAttribute('disabled', 'disabled')
     document.getElementById('deal_btn').setAttribute('disabled', 'disabled')
@@ -143,7 +146,7 @@ export class AppComponent {
   // show dealer's hand
   showHand(): void {
     this.dealer.hand.filter(function(card) {
-      card.isHidden = false;
+      card.setVisible()
     })  
   }
 

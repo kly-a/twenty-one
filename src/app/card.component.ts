@@ -1,26 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, state, style, trigger, transition, animate } from '@angular/core';
 import { Card } from './card';
 
 @Component({
 	selector: 'card',
 	template: `
-        <div id="{{card.rank}}_{{card.suit}}" 
+        <div [@flyInOut]="card.state" id="{{card.rank}}_{{card.suit}}" 
         	 (click)="card.onToggle? toggle(card): ''"
         	 class="card"
         	 [class.card-hidden]="card.isHidden">
-
-        	<span *ngIf="card.suit === 'Clubs'">
-        	 	{{card.face}} &clubs;
-			</span>
-	        <span *ngIf="card.suit === 'Spades'">
-				{{card.face}} &spades;
-			</span>
-	        <span class="card-red" *ngIf="card.suit === 'Diamonds'">
-				{{card.face}} &diams;
-			</span>
-	        <span class="card-red" *ngIf="card.suit === 'Hearts'">
-				{{card.face}} &hearts;
-			</span>
+        	 
+        	 <span [class.card-red]="card.suit === 3 || card.suit === 4" 
+        	 	   [innerHtml]="card.face"></span>
 		</div>
 	`,
 	styles: [`
@@ -45,12 +35,31 @@ import { Card } from './card';
 			color: #AB201B;
 		}
 	`
+	],
+	animations: [
+	  trigger('flyInOut', [
+	    state('in', style({opacity: 1, transform: 'translateX(0)'})),
+	    transition('void => *', [
+	      style({
+	        opacity: 0,
+	        transform: 'translateX(-100%)'
+	      }),
+	      animate('0.2s ease-in')
+	    ]),
+	    transition('* => void', [
+	      animate('0.2s 10 ease-out', style({
+	        opacity: 0,
+	        transform: 'translateX(100%)'
+	      }))
+	    ])
+	  ])
 	]
 })
 
 export class CardComponent {
 	@Input() card: Card
 
+	state = 'in'
 	toggle(card: Card){
 		card.toggle()
 	}

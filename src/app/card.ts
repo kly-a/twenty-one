@@ -11,8 +11,12 @@ export class Card {
 		this.suit = suit
 		this.isHidden = false
 		this.onToggle = false
-		// this.setFaceValue(rank, suit);
-		switch (rank) {
+		this.setFaceAndValue()
+	}
+
+	// setter 
+	setFaceAndValue(): void {
+		switch (this.rank) {
 			case 11:
 				this.value = 10
 				this.face  = 'J'
@@ -30,36 +34,45 @@ export class Card {
 				this.face  = 'A'
 				break
 			default:
-				this.value = rank
-				this.face  = rank
+				this.value = this.rank
+				this.face  = this.rank
 				break
 		}
 
-		switch (suit) {
+		switch (this.suit) {
 			case 1:
-				this.suit = 'Clubs'
+				this.face += ` &clubs;`
 				break;
 			case 2:
-				this.suit = 'Spades'
+				this.face += ` &spades;`
 				break;
 			case 3:
-				this.suit = 'Diamonds'
+				this.face += ` &diams;`
 				break;
 			case 4:
-				this.suit = 'Hearts'
+				this.face += ` &hearts;`
 				break
 			default:
 				break
 		}
 	}
 
-	// setter 
 	setCard(card: Card): void {
 		this.rank = card.rank
 		this.suit = card.suit
 		this.face = card.face
 		this.value = card.value
 		this.isHidden = card.isHidden
+	}
+
+	setHidden(): void {
+		this.face = `&nbsp;`;
+		this.isHidden = true;
+	}
+
+	setVisible(): void {
+		this.setFaceAndValue();
+		this.isHidden = false;
 	}
 
 	setToggle(): void {
