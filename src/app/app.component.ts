@@ -44,15 +44,18 @@ export class AppComponent {
           swal({
             title: 'Decisions',
             html: 
-              `You have two decisions: <b>Hit</b> or <b>Stand</b><br>
+              `You have 3 decisions: <b>Hit</b> or <b>Stand</b> or <b>Settle</b><br>
               <br><b>Hit</b>: Take another card from the dealer.
               <br><b>Stand</b>: Take no more cards.
+              <br><b>Settle</b>: Settle the bets and end the current round.
               `,
           }).then(function() {
             swal({
-              title: 'Settle',
+              title: 'Card Values',
               html:
-              `When the dealer chose to <b>Stand</b> and you also chose to <b>Stand</b>, click <b>Settle</b> to settle the bets and finish the round.`,
+              `K, Q & J's are valued as 10
+              <br>Ace is valued as 1
+              `,
             })
           })
         })

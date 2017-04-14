@@ -62,7 +62,7 @@ export class Game {
 		if (!this.deck.cards.length) return
 
 		if (this.dealer.cardValues >= 17) {
-			this.setHistory('Dealer stands.. your turn')
+			if (this.dealer.cardValues < 21) this.setHistory('Dealer stands.. your turn')
 			return
 		} 
 		this.dealer.hand.push(this.deck.getCard())
