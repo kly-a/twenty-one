@@ -23,13 +23,13 @@ export class Game {
 	dealTwoCards() {
 		if (!this.deck.cards.length) return
 
-		// deal player's cards
+		// deal first two player's cards
 		for (let i = 0; i < 2; i++) {
 			this.player.hand.push(this.deck.getCard())
 		}
 		this.player.calculateCardValues();
 
-		// deal dealer's cards	
+		// deal first two dealer's cards	
 		const card = this.deck.getCard()
 		card.setHidden() // set one card face down
 		this.dealer.hand.push(card)
@@ -61,10 +61,10 @@ export class Game {
 	dealDealerCard() {
 		if (!this.deck.cards.length) return
 
-		if (this.dealer.cardValues >= 17 && this.dealer.cardValues <= 21) {
+		if (this.dealer.cardValues >= 17) {
 			this.setHistory('Dealer stands.. your turn')
 			return
-		}
+		} 
 		this.dealer.hand.push(this.deck.getCard())
 		this.setHistory('Dealer dealt a card')
 
@@ -80,12 +80,7 @@ export class Game {
 	        break;
 	    }
 
-		setTimeout(() => this.dealDealerCard(), 1000)
-	}
-
-	getCardValues(player: Player): number {
-		if (player.isDealer) return this.dealer.cardValues
-		else return this.player.cardValues
+		setTimeout(() => this.dealDealerCard(), 500)
 	}
 
 	setHistory(string) {

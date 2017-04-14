@@ -72,13 +72,11 @@ export class AppComponent {
   runTimer() {
     const list = document.getElementById('actions')
     const g    = document.getElementsByTagName('history')
-    console.log(g.length)
     if (g.length === 2) {
       return
-    }
-    if (g.length > 5) g[0].remove()
+    } else if (g.length > 5) g[0].remove()
     
-    setTimeout(() => this.runTimer(), 3000)
+    setTimeout(() => this.runTimer(), 2000)
   }
 
   hit(): void {
@@ -101,14 +99,6 @@ export class AppComponent {
     this.game.setHistory('You stand.. Dealer\'s turn')
     this.playDealer()
   }
-
-  // recursive (count) {
-  //   if (count === 0) {
-  //     return
-  //   }
-  //   console.log(count)
-  //   setTimeout(() => this.recursive(count - 1), 1000)
-  // }
 
   playDealer() {
     this.game.dealDealerCard()
