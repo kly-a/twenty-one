@@ -8,7 +8,6 @@ export class Game {
 	dealer: Player
 	state: {
 		history: History[],
-		isReady: boolean
 	};
 
 	constructor() {
@@ -17,8 +16,7 @@ export class Game {
 		this.dealer = new Player()
 		this.dealer.setDealer()
 		this.state = {
-			history: [],
-			isReady: false
+			history: []
 		}
 	}
 
@@ -26,100 +24,68 @@ export class Game {
 		if (!this.deck.cards.length) return
 
 		// deal player's cards
-		this.player.hand.push(this.deck.getCard())
-		this.player.hand.push(this.deck.getCard())
-		this.setCardValues(this.player);
+		for (let i = 0; i < 2; i++) {
+			this.player.hand.push(this.deck.getCard())
+		}
+		this.player.calculateCardValues();
 
-		// deal dealer's cards
+		// deal dealer's cards	
 		const card = this.deck.getCard()
-		card.setHidden()	// set one card face down
-		this.dealer.hand.push(card);
+		card.setHidden() // set one card face down
+		this.dealer.hand.push(card)
 		this.dealer.hand.push(this.deck.getCard())
-		this.setCardValues(this.dealer);
+		this.dealer.calculateCardValues();
+		
 		this.setHistory('Game starts. Your turn')
-		this.state.isReady = true;
 	}
 	
 	dealCard() {
 		if (!this.deck.cards.length) return
-		return new Promise((resolve, reject) => {
-			const card = this.deck.getCard()
-			this.player.hand.push(card)
-			this.setCardValues(this.player)
-			this.setHistory('You dealt a card')
-			resolve('done')
-		})
-	}
 
-	sleep(ms) {
-		return new Promise((resolve) => setTimeout(resolve, ms))
+		this.player.hand.push(this.deck.getCard())
+		this.setHistory('You dealt a card')
+
+		this.player.calculateCardValues()
+		switch (this.player.status) {
+	      case 'Blackjack':
+	        this.setHistory('Blackjack! You win')
+	        break;
+	      case 'Bust':
+	        this.setHistory('Bust. Dealer wins')
+	        break;
+	      default:
+	        break;
+	    }
 	}
 
 	dealDealerCard() {
 		if (!this.deck.cards.length) return
-		const promise = new Promise((resolve, reject) => { 
-			if (this.getCardValues(this.dealer) < 17) {
-				const card = this.deck.getCard()
-				this.dealer.hand.push(card)
-				this.setHistory('Dealer dealt a card')
-				this.setCardValues(this.dealer)
-				this.sleep(1500).then(() => {
-					this.dealDealerCard()
-				})
-			} else {
-				this.setHistory('Dealer stands.. your turn')
-				resolve()
-			}
-		})
-		return promise
-	}
 
-	setCardValues(player: Player): void {
-		let v = 0
-		for (let i = 0; i < player.hand.length; i++) {
-			let card = player.hand[i]
-			v += card.value
+		if (this.dealer.cardValues >= 17 && this.dealer.cardValues <= 21) {
+			this.setHistory('Dealer stands.. your turn')
+			return
 		}
-		player.cardValues = v
+		this.dealer.hand.push(this.deck.getCard())
+		this.setHistory('Dealer dealt a card')
+
+		this.dealer.calculateCardValues()
+		switch (this.dealer.status) {
+	      case 'Blackjack':
+	        this.setHistory('Blackjack! Dealer wins')
+	        break;
+	      case 'Bust':
+	        this.setHistory('Bust. Player win')
+	        break;
+	      default:
+	        break;
+	    }
+
+		setTimeout(() => this.dealDealerCard(), 1000)
 	}
 
 	getCardValues(player: Player): number {
 		if (player.isDealer) return this.dealer.cardValues
 		else return this.player.cardValues
-	}
-
-	checkCurrentCardValues() {
-		const p = this.player.cardValues
-		const d = this.dealer.cardValues
-		
-		if (p === 21) {
-			this.setHistory('21! You win')
-			return {
-				flag: 0,
-				description: '21! You win'
-			};
-		}
-		if (p > 21) {
-			this.setHistory('Bust! Dealer wins')
-			return {
-				flag: 1,
-				description: 'Bust! Dealer wins'
-			};
-		}
-		if (d === 21) {
-			this.setHistory('21! Dealer wins')
-			return {
-				flag: 2,
-				description: '21! Dealer wins'
-			}
-		}
-		if (d > 21) {
-			this.setHistory('Bust! You win')
-			return {
-				flag: 3,
-				description: 'Bust! You win'
-			}
-		}
 	}
 
 	setHistory(string) {
@@ -135,19 +101,19 @@ export class Game {
 		if (p === d) {
 			this.setHistory('Game draw!')
 			return {
-				flag: 0,
+				flag: 'Draw',
 				description: 'Game draw!'
 			}
 		} else if (p > d) {
 			this.setHistory('You win')
 			return {
-				flag: 1,
+				flag: 'PlayerWins',
 				description: 'You win'
 			}
 		} else if (p < d) {
 			this.setHistory('Dealer wins')
 			return {
-				flag: 2,
+				flag: 'DealerWins',
 				description: 'Dealer wins'
 			}
 		}
@@ -158,6 +124,7 @@ export class Player {
 	hand;
 	cardValues: number
 	isDealer: boolean
+	status: any
 
 	constructor() {
 		this.hand = []
@@ -167,5 +134,23 @@ export class Player {
 
 	setDealer() {
 		this.isDealer = true
+	}
+
+	calculateCardValues() {
+		const firstTwoCards = this.hand.length === 1 ? true : false
+		
+		let v = 0
+		for (let i = 0; i < this.hand.length; i++) {
+			let card = this.hand[i]
+			v += card.value
+		}
+		this.cardValues = v
+
+		if (firstTwoCards && v === 21) {
+			this.status = 'Blackjack'
+		}
+		if (v > 21) {
+			this.status = 'Bust'
+		}
 	}
 }

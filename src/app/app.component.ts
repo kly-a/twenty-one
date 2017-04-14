@@ -59,9 +59,6 @@ export class AppComponent {
     });
   }
 
-  updateHistory() {
-  }
-
   dealCards(): void {
     this.deck.shuffle()
     this.game.dealTwoCards()
@@ -69,58 +66,78 @@ export class AppComponent {
     document.getElementById('hit_btn').removeAttribute('disabled')
     document.getElementById('stand_btn').removeAttribute('disabled')
     document.getElementById('settle_btn').removeAttribute('disabled')
+    this.runTimer()
+  }
+
+  runTimer() {
+    const list = document.getElementById('actions')
+    const g    = document.getElementsByTagName('history')
+    console.log(g.length)
+    if (g.length === 2) {
+      return
+    }
+    if (g.length > 5) g[0].remove()
+    
+    setTimeout(() => this.runTimer(), 3000)
   }
 
   hit(): void {
-    this.game.dealCard().then(() => {
-      this.readCardValues()
-    })
-  }
-
-  stand(): void {
-    this.game.setHistory('You stand.. dealer\'s turn')
-    this.playDealer()
-  }
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-  playDealer() {
-    this.game.dealDealerCard().then(() => {
-      this.sleep(2000)
-      this.readCardValues()
-    })
-  }
-
-  readCardValues() {
-    let status = this.game.checkCurrentCardValues()
-    if (!status) return
-    switch (status.flag) {
-      case 0:
-      case 3:
+    this.game.dealCard()
+    switch (this.player.status) {
+      case 'Blackjack':
+        swal('Blackjack! You win')
         this.updateScore(this.player)
         break;
-      case 1:
-      case 2:
+      case 'Bust':
         this.updateScore(this.dealer)
+        swal('Bust. Dealer wins')
         break;
       default:
         break;
     }
-    swal(status.description);
+  }
+
+  stand(): void {
+    this.game.setHistory('You stand.. Dealer\'s turn')
+    this.playDealer()
+  }
+
+  // recursive (count) {
+  //   if (count === 0) {
+  //     return
+  //   }
+  //   console.log(count)
+  //   setTimeout(() => this.recursive(count - 1), 1000)
+  // }
+
+  playDealer() {
+    this.game.dealDealerCard()
+    switch (this.dealer.status) {
+      case 'Blackjack':
+        swal('Blackjack! Dealer wins')
+        this.updateScore(this.dealer)
+        break;
+      case 'Bust':
+        this.updateScore(this.player)
+        swal('Bust. You win')
+        break;
+      default:
+        break;
+    }
   }
 
   settle() {
     const status = this.game.settle()
     if (!status) return
     switch (status.flag) {
-      case 0:
+      case 'Draw':
         this.showHand()
         this.resetButtons()
         break
-      case 1:
+      case 'PlayerWins':
         this.updateScore(this.player)
         break
-      case 2:
+      case 'DealerWins':
         this.updateScore(this.dealer)
         break   
       default:
@@ -130,7 +147,7 @@ export class AppComponent {
   }
 
   updateScore(player) {
-    this.showHand()
+    this.showHand() // show dealer's hand
     if (player) player.isDealer ? this.dealerWin++ : this.playerWin++;
     this.resetButtons()
   }
@@ -152,9 +169,9 @@ export class AppComponent {
 
   nextRound() {
     this.game = new Game(); // start a new game
+    this.deck = this.game.deck;
     this.player = this.game.player;
     this.dealer = this.game.dealer;
-    this.deck = this.game.deck;
     this.gameHistory = this.game.state.history;
 
     document.getElementById('deal_btn').removeAttribute('disabled');

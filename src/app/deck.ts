@@ -27,7 +27,7 @@ export class Deck {
       		this.cards[i].onToggle = true
     	}
 	}
-
+	
 	// get a card from the deck
 	getCard(): Card {
 		if (!this.cards.length) return
