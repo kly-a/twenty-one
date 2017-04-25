@@ -3,10 +3,6 @@
 <section>
     <button id="tutorial_btn" (click)="tutorial()">How to play</button>
     <button id="deal_btn" (click)="dealCards()">Deal cards</button>
-    <button id="settle_btn" (click)="settle()" disabled>Settle</button>
-
-    <button id="hit_btn" (click)="hit()" disabled>Hit</button>
-    <button id="stand_btn" (click)="stand()" disabled>Stand</button>
     <button id="newGame_btn" (click)="nextRound()" disabled>Next round</button>
 
     <div class="container">
@@ -27,12 +23,9 @@
             </div>
         </div>
     </div>
+
+    <button id="settle_btn" (click)="settle()" disabled>Settle</button>
+    <button id="hit_btn" (click)="hit()" disabled>Hit</button>
+    <button id="stand_btn" (click)="stand()" disabled>Stand</button>
+    
 </section>
-
-<section>
-    <p><strong>NOTE:</strong>{{note}}</p>
-<section>
-
-
-<p><small>&copy; 2017 kly-a@github.com | Built with Angular 2 &hearts;</small></p>
-

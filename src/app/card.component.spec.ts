@@ -4,7 +4,7 @@ import { CardComponent } from './card.component';
 
 class MockCardService {
 	public rank: any = 2;
-	public suit: any = 'Spades';
+	public suit: any = 1;
 }
 
 describe('Component: Card', () => {
@@ -28,17 +28,8 @@ describe('Component: Card', () => {
 		expect(card).toBeTruthy();
 	}));
 
-	it('should be 2 of Spades', inject([MockCardService], service => {
+	it('should be 2 of Clubs', inject([MockCardService], service => {
 		expect(service.rank).toBe(2);
-		expect(service.suit).toBe('Spades');
+		expect(service.suit).toBe(1);
 	}));
-
-	// it('should be 4 of Hearts', inject([MockCardService], service => {
-	// 	card.rank = 4;
-	// 	card.suit = 'Hearts';
-	// 	fixture.detectChanges();
-
-	// 	expect(service.rank).toBe(4);
-	// 	expect(service.suit).toBe('Hearts');
-	// }));
 });

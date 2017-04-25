@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Deck } from './deck';
+import { Card } from './card';
 
 const DECK: Deck = new Deck();
 

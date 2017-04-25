@@ -28,7 +28,7 @@ export class AppComponent {
           Professional game involves more rules, variants and often involves real money bets.
           This version is intended for learning purposes only.`;
 
-  tutorial() {
+  tutorial(): void {
     swal({
       title: 'twenty-one',
       text: 'twenty-one also known as Blackjack, is a comparing card game between a player and a dealer'
