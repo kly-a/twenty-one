@@ -1,4 +1,20 @@
-# TwentyOne
+# twenty-one
+twenty-one, also known as Blackjack, is a comparing card game between a player and a dealer. 
+
+### Objectives
+- get 21 points on your first two cards
+- get final points higher than the dealer, without exceeding 21 points
+
+### Decisions
+- **Hit**: Take another card from the dealer
+- **Stand**: Take no more cards
+- **Settle:** Settle the bets and end the current round
+
+### Card values
+- Kings, Queens and Jacks are valued at 10 points
+- Ace is valued at 1 points (note: in a professional game, Ace can be valued at 11 or 1 points)
+
+---
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.28.3.
 

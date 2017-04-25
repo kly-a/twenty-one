@@ -5,12 +5,14 @@ h1 {
 }
 
 section {
+	text-align: center;
 	padding-bottom: 10px;
 }
 
 p {
 	color: #A35F5D;
 }
+
 .center {
 	display: block;
 	text-align: center;
@@ -41,10 +43,6 @@ p {
 	position: relative;
 	text-align: center;
 	border-radius: 3px;
-}
-
-section {
-	text-align: center;
 }
 
 .player {
@@ -84,10 +82,12 @@ button {
 	font-size: 110%;
 	border-radius: 2px;
 }
+
 button:disabled{
 	border: 1px solid lightgray;
 	color: lightgray;
 }
+
 button:hover:enabled {
 	background-color: #A35F5D;
 	color: #F9F7F7;
@@ -103,9 +103,6 @@ hr {
 	width: 85%;
 }
 
-.note {
-
-}
 a {
 	color: #AB201B;
 }
