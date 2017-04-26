@@ -2,7 +2,7 @@ import { Deck } from './deck';
 import { Card } from './card';
 import { History } from './history';
 
-export class Game {
+export class Blackjack {
 	deck: Deck
 	player: Player
 	dealer: Player
@@ -64,7 +64,8 @@ export class Game {
 		if (this.dealer.cardValues >= 17) {
 			if (this.dealer.cardValues < 21) this.setHistory('Dealer stands.. your turn')
 			return
-		} 
+		}
+		 
 		this.dealer.hand.push(this.deck.getCard())
 		this.setHistory('Dealer dealt a card')
 
@@ -112,6 +113,10 @@ export class Game {
 				description: 'Dealer wins'
 			}
 		}
+	}
+
+	shuffle() {
+		this.deck.shuffle();
 	}
 }
 

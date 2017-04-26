@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { BlackjackComponent } from './blackjack.component';
 import { CardComponent } from './card.component';
 import { DeckComponent } from './deck.component';
 import { HistoryComponent } from './history.component';
@@ -11,6 +12,7 @@ import { HistoryComponent } from './history.component';
 @NgModule({
   declarations: [
     AppComponent,
+    BlackjackComponent,
     CardComponent,
     DeckComponent,
     HistoryComponent,
